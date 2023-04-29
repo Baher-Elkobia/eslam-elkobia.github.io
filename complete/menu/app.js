@@ -10,6 +10,9 @@ class App{
 	constructor(){
 		const container = document.createElement( 'div' );
 		document.body.appendChild( container );
+
+        this.assetsPath = '../../assets/';
+        this.loadingBar = new LoadingBar();
         
         this.clock = new THREE.Clock();
         
@@ -37,15 +40,12 @@ class App{
         
         window.addEventListener('resize', this.resize.bind(this) );
 	}	
-    
-    initScene(){
-        this.loadingBar = new LoadingBar();
-        
-        this.assetsPath = '../../assets/';
+
+    loadPlate(){
         const loader = new GLTFLoader().setPath(this.assetsPath);
 		const self = this;
-		
-		// Load a GLTF resource
+
+        // Load a GLTF resource
 		loader.load(
 			// resource URL
 			`sandwich.glb`,
@@ -92,25 +92,62 @@ class App{
 
 			}
 		);
+    }
+    
+    initScene(){
+        this.loadPlate(); 
+
+        this.reticle = new THREE.Mesh(
+            new THREE.RingBufferGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+            new THREE.MeshBasicMaterial()
+        );
         
+        this.reticle.matrixAutoUpdate = false;
+        this.reticle.visible = false;
+        this.scene.add( this.reticle );        
     }
     
     setupXR(){
         this.renderer.xr.enabled = true; 
         
+        const btn = new ARButton( this.renderer, { sessionInit: { requiredFeatures: [ 'hit-test' ], optionalFeatures: [ 'dom-overlay' ], domOverlay: { root: document.body } } } );
+
         const self = this;
+
+        this.hitTestSourceRequested = false;
+        this.hitTestSource = null;
+
+        // function onSelect() {
+        //     if (self.knight===undefined) return;
+            
+        //     if (self.reticle.visible){
+        //         if (self.knight.object.visible){
+        //             self.workingVec3.setFromMatrixPosition( self.reticle.matrix );
+        //             self.knight.newPath(self.workingVec3);
+        //         }else{
+        //             self.knight.object.position.setFromMatrixPosition( self.reticle.matrix );
+        //             self.knight.object.visible = true;
+        //         }
+        //     }
+        // }
+
+        // this.controller = this.renderer.xr.getController( 0 );
+        // this.controller.addEventListener( 'select', onSelect );
         
-
-
-        const btn = new ARButton( this.renderer );
+        // this.scene.add( this.controller ); 
         
         this.gestures = new ControllerGestures( this.renderer );
         this.gestures.addEventListener( 'tap', (ev)=>{
             console.log( 'tap' ); 
-            if (!self.knight.object.visible){
-                self.knight.object.visible = true;
-                self.knight.object.position.set( 0, -0.3, -0.5 ).add( ev.position );
-                self.scene.add( self.knight.object ); 
+
+            if (self.knight===undefined) return;
+            
+            if (self.reticle.visible){
+                if (!self.knight.object.visible){
+                    self.knight.object.visible = true;
+                    self.knight.object.position.set( 0, -0.3, -0.5 ).add( ev.position );
+                    self.scene.add( self.knight.object ); 
+                }
             }
         });
         this.gestures.addEventListener( 'doubletap', (ev)=>{
@@ -162,9 +199,67 @@ class App{
         this.camera.updateProjectionMatrix();
         this.renderer.setSize( window.innerWidth, window.innerHeight );  
     }
+
+    requestHitTestSource(){
+        const self = this;
+        
+        const session = this.renderer.xr.getSession();
+
+        session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+            
+            session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+
+                self.hitTestSource = source;
+
+            } );
+
+        } );
+
+        session.addEventListener( 'end', function () {
+
+            self.hitTestSourceRequested = false;
+            self.hitTestSource = null;
+            self.referenceSpace = null;
+
+        } );
+
+        this.hitTestSourceRequested = true;
+
+    }
     
-	render( ) {   
+    getHitTestResults( frame ){
+        const hitTestResults = frame.getHitTestResults( this.hitTestSource );
+
+        if ( hitTestResults.length ) {
+            
+            const referenceSpace = this.renderer.xr.getReferenceSpace();
+            const hit = hitTestResults[ 0 ];
+            const pose = hit.getPose( referenceSpace );
+
+            this.reticle.visible = true;
+            this.reticle.matrix.fromArray( pose.transform.matrix );
+
+        } else {
+
+            this.reticle.visible = false;
+
+        }
+
+    }
+    
+	render( timestamp, frame ) {   
         this.stats.update();
+
+        const self = this;
+
+        if ( frame ) {
+
+            if ( this.hitTestSourceRequested === false ) this.requestHitTestSource( )
+
+            if ( this.hitTestSource ) this.getHitTestResults( frame );
+
+        }
+
         this.renderer.render( this.scene, this.camera );
     }
 }
