@@ -13,6 +13,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <link href="css/responsive.css" rel="stylesheet">
+<script src="https://unpkg.com/focus-visible@5.2.0/dist/focus-visible.min.js"></script>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]--> 
 
@@ -680,9 +681,7 @@
         <model-viewer id="item-3d" src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
                 ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
                 alt="A 3D model of an astronaut"
-                ar auto-rotate ar-modes="webxr scene-viewer quick-look" camera-controls shadow-intensity="1">
-            <div class="progress-bar" slot="progress-bar">
-            <div class="update-bar"></div>
+                ar auto-rotate ar-modes="webxr scene-viewer quick-look" camera-controls>
         </div>
         <button slot="ar-button" id="ar-button">View in your space</button>
         <div id="ar-prompt"><img src="https://modelviewer.dev/shared-assets/icons/hand.png">
