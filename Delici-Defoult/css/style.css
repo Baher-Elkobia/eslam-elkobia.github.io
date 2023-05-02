@@ -7178,7 +7178,8 @@ html:not(.body-menu-opened) .hamburger .bottom-bun {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 40%;
+  height: 700px;
 }
 
 /* The Close Button */
@@ -7197,5 +7198,6 @@ html:not(.body-menu-opened) .hamburger .bottom-bun {
 }
 
 #item-3d{
-  height: 500px;;
+  height: 500px;
+  margin: auto;
 }
