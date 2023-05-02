@@ -7206,3 +7206,13 @@ html:not(.body-menu-opened) .hamburger .bottom-bun {
   height: 500px;
   margin: auto;
 }
+
+.demo {
+  height: 95vh;
+  background-color: #36b6fe;
+}
+
+.demo model-viewer {
+  width: 100%;
+  height: 100%
+}
