@@ -73,7 +73,6 @@ class App{
 				self.knight = new Player(options);
                 self.knight.object.visible = false;
 				
-				self.knight.action = 'Dance';
 				const scale = 0.003;
 				self.knight.object.scale.set(scale, scale, scale); 
 				
