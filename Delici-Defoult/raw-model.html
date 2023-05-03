@@ -58,22 +58,25 @@
   <script async src='https://www.google-analytics.com/analytics.js'></script>
 </head>
 <body>
-
-    <model-viewer src="https://modelviewer.dev/assets/ShopifyModels/Chair.glb" poster="https://modelviewer.dev/assets/ShopifyModels/Chair.webp" shadow-intensity="1" ar camera-controls touch-action="pan-y" alt="A 3D model carousel">
+    <div class="demo">
+        <model-viewer style="height: 300px; width: 300px; margin: 0 auto;"  src="https://modelviewer.dev/assets/ShopifyModels/Chair.glb" poster="https://modelviewer.dev/assets/ShopifyModels/Chair.webp" shadow-intensity="1" ar camera-controls touch-action="pan-y" alt="A 3D model carousel">
   
-        <button slot="ar-button" id="ar-button">
-          View in your space
-        </button>
-      
-        <div id="ar-prompt">
-          <img src="https://modelviewer.dev/assets/hand.png">
-        </div>
-      
-        <button id="ar-failure">
-          AR is not tracking!
-        </button>
-      </model-viewer>
-      
+            <button slot="ar-button" id="ar-button">
+              View in your space
+            </button>
+          
+            <div id="ar-prompt">
+              <img src="https://modelviewer.dev/assets/hand.png">
+            </div>
+          
+            <button id="ar-failure">
+              AR is not tracking!
+            </button>
+          </model-viewer>
+    </div>
+
+    
+
       <style>
         /* This keeps child nodes hidden while the element loads */
         :not(:defined) > * {

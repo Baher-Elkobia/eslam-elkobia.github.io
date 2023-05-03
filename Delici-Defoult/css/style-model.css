@@ -38,6 +38,16 @@
    --sidebar-speed: .15s;
    --border-style-dark: 1px solid rgba(0, 0, 0, .5);
  }
+
+ .demo {
+  height: 95vh;
+  background-color: #ffffff;
+}
+
+.demo model-viewer {
+  width: 100%;
+  height: 100%
+}
  
  .sidebar {
    margin: 0;
